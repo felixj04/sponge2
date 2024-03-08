@@ -11,9 +11,12 @@
 class StreamReassembler {
   private:
     // Your code here -- add private members as necessary.
-
     ByteStream _output;  //!< The reassembled in-order byte stream
     size_t _capacity;    //!< The maximum number of bytes
+
+    size_t num_unassembled = 0;
+    std::string _check;
+    std::string _buffer;
 
   public:
     //! \brief Construct a `StreamReassembler` that will store up to `capacity` bytes.
