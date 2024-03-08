@@ -19,9 +19,9 @@ void get_URL(const string &host, const string &path) {
     TCPSocket socket;
     socket.connect(Address(host, "http"));
 
-    socket.write("Get " + path + " HTTP/1.1\r\n");
+    socket.write("GET " + path + " HTTP/1.1\r\n");
     socket.write("Host: " + host + "\r\n");
-    socket.write("Conenction: close\r\n");
+    socket.write("Connection: close\r\n");
     socket.write("\r\n");
 
     while(!socket.eof()) {
