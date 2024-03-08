@@ -1,15 +1,15 @@
 Assignment 0 Writeup
 =============
 
-My name: 
+My name: Taewon Jung 
 
-My POVIS ID: 
+My POVIS ID: taewon0727
 
-My student ID (numeric): [your student id here]
+My student ID (numeric): 20220055
 
-This assignment took me about [n] hours to do (including the time on studying, designing, and writing the code).
+This assignment took me about [6] hours to do (including the time on studying, designing, and writing the code).
 
-My secret code from section 2.1 was: [code here]
+My secret code from section 2.1 was: [dd568dabb1]
 
 - Optional: I had unexpected difficulty with: [describe]
 
