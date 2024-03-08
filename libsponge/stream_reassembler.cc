@@ -29,6 +29,11 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
 	    _check[i - initial_loc] = 1;
 	    num_unassembled++;
 	}
+    }
+
+    for(size_t i = 0; i<_capacity; i++){
+        if(_check[i] == 0)
+	    break;
 	num_assembled++;
     }
 
