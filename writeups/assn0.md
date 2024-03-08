@@ -3,7 +3,7 @@ Assignment 0 Writeup
 
 My name: [your name here]
 
-My POVIS ID: [your povis id here]
+My POVIS ID: 
 
 My student ID (numeric): [your student id here]
 
