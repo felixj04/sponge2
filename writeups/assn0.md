@@ -1,7 +1,7 @@
 Assignment 0 Writeup
 =============
 
-My name: [your name here]
+My name: 
 
 My POVIS ID: 
 
