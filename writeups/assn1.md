@@ -9,6 +9,7 @@ My student ID (numeric): 20220055
 
 This assignment took me about 13 hours to do (including the time on studying, designing, and writing the code).
 
+I used the best code from assn0 in this assignment.
 Program Structure and Design of the StreamReassembler:
 1. setting variables.
 The variable initial_loc holds the first place we need to find.
