@@ -15,7 +15,7 @@ using namespace std;
 //! \param isn The initial sequence number
 WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) {
     DUMMY_CODE(n, isn);
-    return WrappingInt32{0};
+    return isn + uint32_t(n);
 }
 
 //! Transform a WrappingInt32 into an "absolute" 64-bit sequence number (zero-indexed)
@@ -30,5 +30,8 @@ WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) {
 //! has a different ISN.
 uint64_t unwrap(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
     DUMMY_CODE(n, isn, checkpoint);
-    return {};
+    uint64_t relative_seq = uint64_t(n - isn);
+    uint64_t abs_seq = (relative_seq >= checkpoint) ? relative_seq : relative_seq + (1ull << 32);
+    uint64_t closest_seq = ((abs_seq - checkpoint) < (checkpoint - (abs_seq - (1ull <<32)))) ? abs_seq : abs_seq - (1ull <<32);
+    return closest_seq;
 }
