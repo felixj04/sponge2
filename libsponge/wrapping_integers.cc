@@ -30,8 +30,21 @@ WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) {
 //! has a different ISN.
 uint64_t unwrap(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
     DUMMY_CODE(n, isn, checkpoint);
-    uint64_t relative_seq = uint64_t(n - isn);
-    uint64_t abs_seq = (relative_seq >= checkpoint) ? relative_seq : relative_seq + (1ull << 32);
-    uint64_t closest_seq = ((abs_seq - checkpoint) < (checkpoint - (abs_seq - (1ull <<32)))) ? abs_seq : abs_seq - (1ull <<32);
-    return closest_seq;
+    uint64_t seq1 = 0;
+    if(n - isn < 0){
+       seq1 = uint64_t(n - isn + (1l<<32));
+    }
+    else{
+       seq1 = uint64_t(n - isn);
+    }
+
+    if(seq1 >= checkpoint){
+        return seq1;
+    }
+    seq1 = seq1 | ((checkpoint >>32) <<32);
+
+    while(seq1 <= checkpoint)
+	seq1 += (1ll <<32 );
+    uint64_t seq2 = seq1 - (1ll <<32);
+    return (checkpoint - seq2<seq1 - checkpoint) ? seq2 : seq1;
 }
