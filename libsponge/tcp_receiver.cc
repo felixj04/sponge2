@@ -56,4 +56,3 @@ optional<WrappingInt32> TCPReceiver::ackno() const {
 }
 
 size_t TCPReceiver::window_size() const { return this->_capacity - this->stream_out().buffer_size(); }
-
