@@ -134,7 +134,6 @@ void TCPSender::ack_received(const WrappingInt32 ackno, const uint16_t _window_s
 	    flight -= seg.length_in_sequence_space();
 	    segments.pop();
 	    time_el = 0;
-	    rto = _initial_retransmission_timeout;
 	    retransmission = 0; 
 	}
 	else{
@@ -156,11 +155,10 @@ void TCPSender::tick(const size_t ms_since_last_tick) {
     	return;
     }
     time_el += ms_since_last_tick;
-    if(time_el >= rto){
+    if(time_el >= 1){
     	segments.push(segments.front());
 	if(window_size || segments.front().header().syn){
 	    ++retransmission;
-	    rto <<= 1;
 	}
 	time_el = 0;
     }

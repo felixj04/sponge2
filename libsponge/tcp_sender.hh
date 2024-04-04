@@ -41,7 +41,6 @@ class TCPSender {
     uint64_t free_space = 0;
     uint64_t retransmission = 0;
     
-    unsigned int rto = 0;
     unsigned int time_el = 0;
     unsigned int receive_time = 0;
     std::queue<TCPSegment> segments{};
