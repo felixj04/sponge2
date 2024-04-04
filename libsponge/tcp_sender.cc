@@ -22,9 +22,18 @@ TCPSender::TCPSender(const size_t capacity, const uint16_t retx_timeout, const s
     , _initial_retransmission_timeout{retx_timeout}
     , _stream(capacity) {}
 
-uint64_t TCPSender::bytes_in_flight() const { return {}; }
+uint64_t TCPSender::bytes_in_flight() const { return flight; }
 
-void TCPSender::fill_window() {}
+void TCPSender::fill_window() {
+    if(is_syn == 0){
+        is_syn = 1;
+	TCPSegment seg;
+	seg.header().syn = 1;
+	_send_segment(seg);
+	return;
+    }
+    if(_stream.buffer_size() == 0 && _segments_out
+}
 
 //! \param ackno The remote receiver's ackno (acknowledgment number)
 //! \param window_size The remote receiver's advertised window size

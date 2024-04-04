@@ -31,7 +31,16 @@ class TCPSender {
 
     //! the (absolute) sequence number for the next byte to be sent
     uint64_t _next_seqno{0};
-
+    
+    bool is_syn = false;
+    bool is_fin = false;
+    bool is_timer = false;
+    uint64_t flight = 0;
+    uint64_t window_size = 0;
+    uint64_t free_space = 0;
+    uint64_t retransmission = 0;
+    
+	
   public:
     //! Initialize a TCPSender
     TCPSender(const size_t capacity = TCPConfig::DEFAULT_CAPACITY,
