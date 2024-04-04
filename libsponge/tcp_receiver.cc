@@ -11,44 +11,48 @@ void DUMMY_CODE(Targs &&... /* unused */) {}
 using namespace std;
 
 void TCPReceiver::segment_received(const TCPSegment &seg) {
-    DUMMY_CODE(seg);
-    TCPHeader header = seg.header();
-    bool syn = header.syn;
-    bool fin = header.fin;
-    bool eof = false;
-    string data = seg.payload().copy();
+    const TCPHeader &header = seg.header();
 
-    if(syn ==0 && is_syn == 0)
-	return;
-    if(is_syn == 0){
-        is_syn = true;
+    // Retrieve SYN, FIN flag and seqno from header
+    const bool syn = header.syn;
+    const bool fin = header.fin;
+    const WrappingInt32 seqno = header.seqno;
+
+    // Update _is_syn & _isn when SYN received
+    if (!this->_is_syn && syn) {
+        this->_is_syn = true;
+        this->_isn = seqno;
     }
 
-    if(syn  == 1 && is_syn == 0){
-        is_syn = true;
-	i_seqno = header.seqno;
-	if(header.fin == 1){
-	    is_fin = true;
-	    eof = true;
-	}
-	_reassembler.push_substring(data, 0, eof);
-	return;
-    }
-    if(fin == 1 || is_fin == 1){
-        is_fin = true;
-	eof = true;
-    }
-    uint64_t stream_idx = unwrap(header.seqno, i_seqno, _reassembler.ack_idx())- is_syn;
-    _reassembler.push_substring(data, stream_idx, eof);
+    // Abort when no SYN received
+    if (!this->_is_syn) return;
+
+    // Update _is_fin when FIN recevied
+    if (fin) this->_is_fin = true;
+
+    // Retreive data from payload
+    const string data = seg.payload().copy();
+    // Calculate stream index by unwrapping from seqno
+    // Unwrap based on _isn with first unassembled index as checkpoint
+    // seqno + syn considers the SYN within data
+    const uint64_t stream_index = unwrap(WrappingInt32(seqno + syn), this->_isn, this->_first_unassembled()) - 1;
+
+    // Push substring to reassembler
+    this->_reassembler.push_substring(data, stream_index, fin);
+}
+
+optional<WrappingInt32> TCPReceiver::ackno() const {
+    // When no connection opened
+    if (!this->_is_syn)
+        return nullopt;
     
+    // Calculate absolute seqno
+    // Consider SYN at first
+    // Consider FIN at last only when reassembler ended its job
+    const uint64_t abs_seqno = this->_is_syn + this->_first_unassembled() + (this->_is_fin && this->_reassembler.empty());
+
+    // Return wrapped absolute seqno as WrappingInt32
+    return wrap(abs_seqno, this->_isn);
 }
 
-optional<WrappingInt32> TCPReceiver::ackno() const 
-{
-    if(is_syn == 0)
-	return nullopt;
-    bool check_reas_fin = _reassembler.empty() && is_fin;
-    return wrap(_reassembler.ack_idx() + check_reas_fin + 1, i_seqno);
-}
-
-size_t TCPReceiver::window_size() const {return _capacity - _reassembler.stream_out().buffer_size();}
+size_t TCPReceiver::window_size() const { return this->_capacity - this->stream_out().buffer_size(); }
