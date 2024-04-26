@@ -78,9 +78,34 @@ size_t TCPConnection::write(const string &data) {
 
 //! \param[in] ms_since_last_tick number of milliseconds since the last call to this method
 void TCPConnection::tick(const size_t ms_since_last_tick) {
+	bool ischeck_in, ischeck_out;
+	ischeck_in = false;
+	ischeck_out = false;
 	time_cnt = time_cnt + ms_since_last_tick;
 	_sender.tick(ms_since_last_tick);
 	
+	if(_sender.segments_out().size()>0){
+		TCPSegment returnseg = _sender.segments_out().front();
+		_sender.segments_out().pop();
+		setting_ack_window(returnseg);
+		_segments_out.push(returnseg);
+	}
+	if(_receiver.unassembled_bytes() == 0 && _receiver.stream_out().input_ended()){
+		ischeck_in = 1;
+	}
+	if(_sender.stream_in().eof() == 1 && _sender.bytes_in_flight() == 0){
+		if(_sender.next_seqno_absolute() == _sender.stream_in().bytes_written() + 2){
+			ischeck_out = 1;
+		}
+	}
+	if(ischeck_in == 1 && ischeck_out == 1){
+		if(!_linger_after_streams_finish){
+			is_active = false;
+		}
+		else if(time_cnt >= 10 * _cfg.rt_timeout){
+			is_active = false;
+		}
+	}
 	return;
 }
 
