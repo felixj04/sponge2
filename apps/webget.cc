@@ -15,13 +15,16 @@ void get_URL(const string &host, const string &path) {
     socket.write("GET " + path + " HTTP/1.1\r\n");
     socket.write("Host: " + host + "\r\n");
     socket.write("Connection: close\r\n\r\n");
-
+	
     // read response (until eof)
     while (!socket.eof()) {
         cout << socket.read();
     }
 
     socket.close();
+	
+	cerr << "Function called: get_URL(" << host << ", " << path << ").\n";
+    cerr << "Warning: get_URL() has not been implemented yet.\n";
 }
 
 int main(int argc, char *argv[]) {
