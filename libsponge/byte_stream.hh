@@ -10,14 +10,12 @@
 //! and then no more bytes can be written.
 class ByteStream {
   private:
-    std::string _data = {};  //!< Buffer of the stream
+    // Your code here -- add private members as necessary.
 
-    size_t _capacity = 0;  //!< Capacity of the stream
-
-    size_t _total_written = 0;  //!< Total number of bytes written
-    size_t _total_read = 0;     //!< Total number of bytes popped
-
-    bool _is_input_ended = false;  //!< Flag indicating the end of the stream input
+    // Hint: This doesn't need to be a sophisticated data structure at
+    // all, but if any of your tests are taking longer than a second,
+    // that's a sign that you probably want to keep exploring
+    // different approaches.
 
     bool _error{};  //!< Flag indicating that the stream suffered an error.
 
