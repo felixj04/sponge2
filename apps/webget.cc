@@ -8,7 +8,7 @@ using namespace std;
 
 void get_URL(const string &host, const string &path) {
     // connect to server
-    /*TCPSocket socket;
+    TCPSocket socket;
     socket.connect(Address(host, "http"));
 
     // request
@@ -22,7 +22,7 @@ void get_URL(const string &host, const string &path) {
         cout << socket.read();
     }
 
-    socket.close();*/
+    socket.close();
 	cerr << "Function called: get_URL(" << host << ", " << path << ").\n";
     cerr << "Warning: get_URL() has not been implemented yet.\n";
 }
