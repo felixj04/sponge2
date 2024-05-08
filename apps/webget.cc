@@ -7,18 +7,22 @@
 using namespace std;
 
 void get_URL(const string &host, const string &path) {
-    TCPSocket sock;
-    // CS144TCPSocket sock;
-    Address addr(host, "http");
-    sock.connect(addr);
-    sock.write("GET " + path + " HTTP/1.1\r\nHOST:" + host + " \r\nConnection: close\r\n\r\n");
+    // connect to server
+    TCPSocket socket;
+    socket.connect(Address(host, "http"));
 
-    // Then you'll need to print out everything the server sends back,
-    // (not just one call to read() -- everything) until you reach
-    // the "eof" (end of file).
-    while (!sock.eof()) {
-        cout << sock.read();
+    // request
+    socket.write("GET " + path + " HTTP/1.1\r\n");
+    socket.write("Host: " + host + "\r\n");
+    socket.write("Connection: close\r\n");
+    socket.write("\r\n");
+
+    // read response (until eof)
+    while (!socket.eof()) {
+        cout << socket.read();
     }
+
+    socket.close();
 }
 
 int main(int argc, char *argv[]) {
