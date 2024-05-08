@@ -14,8 +14,7 @@ void get_URL(const string &host, const string &path) {
     // request
     socket.write("GET " + path + " HTTP/1.1\r\n");
     socket.write("Host: " + host + "\r\n");
-    socket.write("Connection: close\r\n");
-    socket.write("\r\n");
+    socket.write("Connection: close\r\n\r\n");
 
     // read response (until eof)
     while (!socket.eof()) {
@@ -39,7 +38,7 @@ int main(int argc, char *argv[]) {
             cerr << "\tExample: " << argv[0] << " stanford.edu /class/cs144\n";
             return EXIT_FAILURE;
         }
-
+	
         // Get the command-line arguments.
         const string host = argv[1];
         const string path = argv[2];
